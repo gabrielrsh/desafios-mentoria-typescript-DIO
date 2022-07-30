@@ -1,0 +1,23 @@
+{
+  "name": "desafios-mentoria-typescript-dio",
+  "version": "1.0.0",
+  "description": "Este repositório contém soluções para os desafios propostos na mentoria de typescript na plataforma DIO.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabrielrsh/desafios-mentoria-typescript-DIO.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabrielrsh/desafios-mentoria-typescript-DIO/issues"
+  },
+  "homepage": "https://github.com/gabrielrsh/desafios-mentoria-typescript-DIO#readme",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
