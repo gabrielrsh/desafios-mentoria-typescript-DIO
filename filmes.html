@@ -20,6 +20,21 @@
         </div>
     </div>
 
+    <div id="container-lista" style="display: flex; visibility: hidden; flex-direction: column; height: 100px; justify-content: space-around;">
+        <div>
+            <input id="nome-lista" type="text" placeholder="Nome da Lista" onchange="preencherNomeLista(event)">
+            <input id="descricao" type="text" placeholder="Descricao" onchange="preencherDescricao(event)">
+            <button id="btn-criar-lista" disabled>Criar Lista</button>
+        </div>
+
+        <div>
+            <input id="id-lista" type="text" placeholder="ID da lista" onchange="preencherIdLista(event)">
+            <input id="id-filme" type="text" placeholder="ID do filme" onchange="preencherIdFilme(event)">
+            <button id="btn-add-filme" disabled>Adicionar Filme</button>
+        </div>
+    </div>
+    
+
     <script src="dist/desafios/desafio04.js"></script>
 </body>
 </html>

@@ -15,16 +15,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 // Todas as requisições necessárias para as atividades acima já estão prontas, mas a implementação delas ficou pela metade (não vou dar tudo de graça).
 // Atenção para o listener do botão login-button que devolve o sessionID do usuário
 // É necessário fazer um cadastro no https://www.themoviedb.org/ e seguir a documentação do site para entender como gera uma API key https://developers.themoviedb.org/3/getting-started/introduction
-var apiKey = '3f301be7381a03ad8d352314dcc3ec1d';
+var apiKey = 'd7198fc36e4e5404427d6748f108ca4b';
 let requestToken;
 let username;
 let password;
 let sessionId;
-let listId = '7101979';
+let listId;
+let nomeLista;
+let descricao = "";
+let movieId;
 let loginButton = document.getElementById('login-button');
 let searchButton = document.getElementById('search-button');
 let searchContainer = document.getElementById('search-container');
 let inputSearch = document.getElementById('search');
+let containerLista = document.getElementById('container-lista');
+let createListButton = document.getElementById('btn-criar-lista');
+let addMovieButton = document.getElementById('btn-add-filme');
+addMovieButton === null || addMovieButton === void 0 ? void 0 : addMovieButton.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
+    yield adicionarFilmeNaLista(movieId, listId);
+}));
+createListButton === null || createListButton === void 0 ? void 0 : createListButton.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
+    yield criarLista(nomeLista, descricao);
+}));
 loginButton === null || loginButton === void 0 ? void 0 : loginButton.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
     yield criarRequestToken();
     yield logar();
@@ -36,15 +48,16 @@ searchButton === null || searchButton === void 0 ? void 0 : searchButton.addEven
         lista.outerHTML = "";
     }
     let query = inputSearch === null || inputSearch === void 0 ? void 0 : inputSearch.value;
-    let listaDeFilmes = yield procurarFilme(query);
+    let resultadoBusca = yield procurarFilme(query);
+    console.log();
     let ul = document.createElement('ul');
     ul.id = "lista";
-    for (const item of listaDeFilmes.results) {
+    for (const item of resultadoBusca.results) {
         let li = document.createElement('li');
-        li.appendChild(document.createTextNode(item.original_title));
+        li.appendChild(document.createTextNode(item.original_title + " - ID:" + item.id));
         ul.appendChild(li);
     }
-    console.log(listaDeFilmes);
+    console.log(resultadoBusca.results);
     searchContainer === null || searchContainer === void 0 ? void 0 : searchContainer.appendChild(ul);
 }));
 function preencherSenha() {
@@ -70,8 +83,45 @@ function validateLoginButton() {
         loginButton.disabled = true;
     }
 }
+function validateCreateListButton() {
+    if (nomeLista)
+        createListButton.disabled = false;
+    else
+        createListButton.disabled = true;
+}
+function validateAddMovie() {
+    if (listId && movieId)
+        addMovieButton.disabled = false;
+    else
+        addMovieButton.disabled = true;
+}
+function exibeCriaLista() {
+    containerLista.style.visibility = 'visible';
+    let p = document.createElement('p');
+    p.innerHTML = `Logado como: ${username}`;
+    containerLista.before(p);
+}
+function preencherNomeLista() {
+    let inputNomeLista = document.getElementById('nome-lista');
+    nomeLista = inputNomeLista.value;
+    validateCreateListButton();
+}
+function preencherDescricao() {
+    let inputDescricao = document.getElementById('descricao');
+    descricao = inputDescricao.value;
+}
+function preencherIdLista() {
+    let inputIdLista = document.getElementById('id-lista');
+    listId = inputIdLista.value;
+    validateAddMovie();
+}
+function preencherIdFilme() {
+    let inputIdFilme = document.getElementById('id-filme');
+    movieId = inputIdFilme.value;
+    validateAddMovie();
+}
 class HttpClient {
-    static get({ url, method, body = null }) {
+    static get({ url = "", method = "", body = {} }) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 let request = new XMLHttpRequest();
@@ -93,11 +143,12 @@ class HttpClient {
                         statusText: request.statusText
                     });
                 };
+                let contexto = "";
                 if (body) {
                     request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                    body = JSON.stringify(body);
+                    contexto = JSON.stringify(body);
                 }
-                request.send(body);
+                request.send(contexto);
             });
         });
     }
@@ -151,6 +202,8 @@ function criarSessao() {
             method: "GET"
         });
         sessionId = result.session_id;
+        if (result.success)
+            exibeCriaLista();
     });
 }
 function criarLista(nomeDaLista, descricao) {
@@ -187,17 +240,4 @@ function pegarLista() {
         });
         console.log(result);
     });
-}
-{ /* <div style="display: flex;">
-  <div style="display: flex; width: 300px; height: 100px; justify-content: space-between; flex-direction: column;">
-      <input id="login" placeholder="Login" onchange="preencherLogin(event)">
-      <input id="senha" placeholder="Senha" type="password" onchange="preencherSenha(event)">
-      <input id="api-key" placeholder="Api Key" onchange="preencherApi()">
-      <button id="login-button" disabled>Login</button>
-  </div>
-  <div id="search-container" style="margin-left: 20px">
-      <input id="search" placeholder="Escreva...">
-      <button id="search-button">Pesquisar Filme</button>
-  </div>
-</div>*/
 }
